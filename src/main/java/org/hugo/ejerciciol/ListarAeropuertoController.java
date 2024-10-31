@@ -18,6 +18,7 @@ import javafx.scene.Scene;
 import java.io.IOException;
 import java.sql.SQLException;
 import Model.ModelAvion;
+import org.hugo.ejerciciol.AniadirYEditarAeropuertoController;
 /**
  * Controlador para la vista de listar aeropuertos.
  */
@@ -224,32 +225,44 @@ public class ListarAeropuertoController {
     }
 
     @FXML
-    void aniadirAeropuerto(ActionEvent event) {
-        esAniadir=true;
-        s=new Stage();
+    public void aniadirAeropuerto(ActionEvent event) {
+        esAniadir = true; // Indica que estamos en modo "añadir"
+        Stage s = new Stage(); // Crear una nueva ventana
         Scene scene;
+
         try {
+            // Cargar el FXML para la ventana de añadir/editar aeropuerto
             FXMLLoader controlador = new FXMLLoader(HelloApplication.class.getResource("AniadirYEditarAeropuertos.fxml"));
             scene = new Scene(controlador.load());
+
             s.setTitle("Añade un aeropuerto");
             s.setScene(scene);
+
+            // Obtener el controlador de la nueva ventana
             AniadirYEditarAeropuertoController controller = controlador.getController();
-            controller.setTablaPrivado(tablaPrivado);
-            controller.setTablaPublico(tablaPublico);
+            controller.setTablaPrivado(tablaPrivado); // Pasar la tabla privada
+            controller.setTablaPublico(tablaPublico); // Pasar la tabla pública
+
+            // Configurar visibilidad de los RadioButton
             controller.getRbPublico().setVisible(true);
             controller.getRbPrivado().setVisible(true);
+
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Manejo de excepciones
         }
-        s.setResizable(false);
-        s.initOwner(HelloApplication.getStage());
-        s.initModality(javafx.stage.Modality.WINDOW_MODAL);
-        s.showAndWait();
+
+        s.setResizable(false); // Hacer la ventana no redimensionable
+        s.initOwner(HelloApplication.getStage()); // Establecer el dueño de la ventana
+        s.initModality(javafx.stage.Modality.WINDOW_MODAL); // Modalidad de ventana
+        s.showAndWait(); // Mostrar la ventana y esperar su cierre
+
+        // Después de que se cierre la ventana, actualizar las tablas y filtrar
         filtrarPorNombre();
         tablaPublico.refresh();
         tablaPrivado.refresh();
-        initialize();
-        }
+        initialize(); // Re-inicializar si es necesario
+    }
+
 
     @FXML
     void aniadirAvion(ActionEvent event) {

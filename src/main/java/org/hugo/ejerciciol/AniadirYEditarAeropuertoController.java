@@ -1,17 +1,20 @@
 package org.hugo.ejerciciol;
 
-import javafx.event.ActionEvent;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
-import javafx.fxml.FXML;
 import Dao.DaoAeropuerto;
 import Dao.DaoAeropuertoPrivado;
 import Dao.DaoAeropuertoPublico;
 import Dao.DaoDireccion;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import Model.ModelAeropuertoPrivado;
 import Model.ModelAeropuertoPublico;
 import Model.ModelDireccion;
+import javafx.stage.Stage;
+
+
+
 
 /**
  * Controlador para la gestión de la adición y edición de aeropuertos en la aplicación.
@@ -64,6 +67,30 @@ public class AniadirYEditarAeropuertoController {
 
     private TableView<ModelAeropuertoPrivado> tablaPrivado;
     private TableView<ModelAeropuertoPublico> tablaPublico;
+    @FXML
+    void generarCampos(ActionEvent event) {
+        if (rb_privado.isSelected()) {
+            // Mostrar campos para aeropuerto privado
+            lbl_NumeroDeSocios.setVisible(true);
+            txt_numeroDeSocios.setVisible(true);
+
+            // Ocultar campos para aeropuerto público
+            lbl_Financiacion.setVisible(false);
+            txt_financiacion.setVisible(false);
+            lbL_NumeroDeTrabajadores.setVisible(false);
+            txt_trabajadores.setVisible(false);
+        } else if (rb_publico.isSelected()) {
+            // Mostrar campos para aeropuerto público
+            lbl_Financiacion.setVisible(true);
+            txt_financiacion.setVisible(true);
+            lbL_NumeroDeTrabajadores.setVisible(true);
+            txt_trabajadores.setVisible(true);
+
+            // Ocultar campos para aeropuerto privado
+            lbl_NumeroDeSocios.setVisible(false);
+            txt_numeroDeSocios.setVisible(false);
+        }
+    }
 
     /**
      * Establece el texto del campo de año de inauguración.
@@ -177,152 +204,210 @@ public class AniadirYEditarAeropuertoController {
      */
     @FXML
     void guardar(ActionEvent event) {
-        String error = "";
-        String nombre = txt_nombre.getText();
-        String pais = txt_pais.getText();
-        String ciudad = txt_ciudad.getText();
-        String calle = txt_calle.getText();
-        int numero = -1;
-        int anioInauguracion = -1;
-        int capacidad = -1;
-        boolean esPublico = rb_publico.isSelected();
-        float financiacion = -1;
-        int numTrabajadores = -1;
-        int numSocios = -1;
-        boolean existe = false;
-
-        // Validación
-        error = validarStrings(error); // Asumo que este método está definido en otra parte
-        if (txt_numero.getText().isEmpty()) {
-            error += "El campo número es obligatorio\n";
-        } else {
+        String error="";
+        String nombre=txt_nombre.getText();
+        String pais=txt_pais.getText();
+        String ciudad=txt_ciudad.getText();
+        String calle=txt_calle.getText();
+        int numero=-1;
+        int anioInauguracion=-1;
+        int capacidad=-1;
+        boolean esPublico=rb_publico.isSelected();
+        float financiacion=-1;
+        int numTrabajadores=-1;
+        int numSocios=-1;
+        boolean existe=false;
+        //Validacion
+        error = validarStrings(error);
+        if(txt_numero.getText().isEmpty()) {
+            error+="El campo numero es obligatorio\n";
+        }else {
             try {
-                numero = Integer.parseInt(txt_numero.getText());
-                if (numero <= 0) {
-                    error += "El número de la calle no puede ser menor que 1\n"; // Cambié la forma de manejar el error
+                numero=Integer.parseInt(txt_numero.getText());
+                if(numero<=0) {
+                    throw new Exception();
                 }
-            } catch (NumberFormatException e) {
-                error += "El número de la calle debe ser un número\n";
+            }catch(NumberFormatException e) {
+                error+="El numero de la calle debe ser un numero\n";
+            } catch (Exception e) {
+                error+="El numero de la calle no puede ser menor que 1\n";
             }
         }
-        if (txt_anioDeInauguracion.getText().isEmpty()) {
-            error += "El campo año de inauguración es obligatorio\n";
-        } else {
+        if(txt_anioDeInauguracion.getText().isEmpty()) {
+            error+="El campo año de inauguracion es obligatorio\n";
+        }else {
             try {
-                anioInauguracion = Integer.parseInt(txt_anioDeInauguracion.getText());
-                if (anioInauguracion < 1900) {
-                    error += "El año de inauguración no puede ser menor al 1900\n"; // Cambié la forma de manejar el error
+                anioInauguracion=Integer.parseInt(txt_anioDeInauguracion.getText());
+                if(anioInauguracion<1900) {
+                    throw new Exception();
                 }
-            } catch (NumberFormatException e) {
-                error += "El año de inauguración debe ser un número\n";
+            }catch(NumberFormatException e) {
+                error+="El año de inauguracion debe ser un numero\n";
+            } catch (Exception e) {
+                error+="El año de inauguracion no puede ser menor al 1900\n";
             }
         }
-        if (txt_capacidad.getText().isEmpty()) {
-            error += "El campo capacidad es obligatorio\n";
-        } else {
+        if(txt_capacidad.getText().isEmpty()) {
+            error+="El campo capacidad es obligatorio\n";
+        }else {
             try {
-                capacidad = Integer.parseInt(txt_capacidad.getText());
-                if (capacidad <= 0) {
-                    error += "La capacidad no puede ser menor a 1\n"; // Cambié la forma de manejar el error
+                capacidad=Integer.parseInt(txt_capacidad.getText());
+                if(capacidad<=0) {
+                    throw new Exception();
                 }
-            } catch (NumberFormatException e) {
-                error += "La capacidad debe ser un número\n";
+            }catch(NumberFormatException e) {
+                error+="La capacidad debe ser un numero\n";
+            } catch (Exception e) {
+                error+="La capacidad no puede ser menor a 1\n";
             }
         }
-        if (esPublico) {
-            if (txt_financiacion.getText().isEmpty()) {
-                error += "El campo financiación es obligatorio\n";
-            } else {
-                if (!txt_financiacion.getText().matches("^\\d{1,10}(\\.\\d{1,2})?$")) {
-                    error += "La financiación puede tener como mucho 10 dígitos antes del punto y 2 después\n";
-                } else {
+        if(esPublico) {
+            if(esPublico&&txt_financiacion.getText().isEmpty()) {
+                error+="El campo financiacion es obligatorio\n";
+            }else {
+                if(!txt_financiacion.getText().matches("^\\d{1,10}(\\.\\d{1,2})?$")){
+                    error+="La financiacion puede tener como mucho 10 digitos antes del punto y 2 despues\n";
+                }else {
                     try {
-                        financiacion = Float.parseFloat(txt_financiacion.getText());
-                        if (financiacion <= 0) {
-                            error += "La financiación no puede ser menor que 1\n"; // Cambié la forma de manejar el error
+                        financiacion=Float.parseFloat(txt_financiacion.getText());
+                        if(financiacion<=0) {
+                            throw new Exception();
                         }
-                    } catch (NumberFormatException e) {
-                        error += "La financiación debe ser un número\n";
+                    }catch(NumberFormatException e) {
+                        error+="La financiacion debe ser un numero\n";
+                    } catch (Exception e) {
+                        error+="La financiacion no puede ser menor que 1\n";
                     }
                 }
             }
-            if (txt_trabajadores.getText().isEmpty()) {
-                error += "El campo número de trabajadores es obligatorio\n";
-            } else {
+        }
+        if(esPublico) {
+            if(txt_trabajadores.getText().isEmpty()) {
+                error+="El campo numero de trabajadores es obligatorio\n";
+            }else {
                 try {
-                    numTrabajadores = Integer.parseInt(txt_trabajadores.getText());
-                    if (numTrabajadores <= 0) {
-                        error += "El número de trabajadores no puede ser menor que 1\n"; // Cambié la forma de manejar el error
+                    numTrabajadores=Integer.parseInt(txt_trabajadores.getText());
+                    if(numTrabajadores<=0) {
+                        throw new Exception();
                     }
-                } catch (NumberFormatException e) {
-                    error += "El número de trabajadores debe ser un número\n";
+                }catch(NumberFormatException e) {
+                    error+="El numero de trabajadores debe ser un numero\n";
+                } catch (Exception e) {
+                    error+="El numero de trabajadores no puede ser menor que 1\n";
                 }
             }
-        } else {
-            if (txt_numeroDeSocios.getText().isEmpty()) {
-                error += "El campo número de socios es obligatorio\n";
-            } else {
+        }
+        if(!esPublico) {
+            if(txt_numeroDeSocios.getText().isEmpty()) {
+                error+="El campo Nº socios es obligatorio\n";
+            }else {
                 try {
-                    numSocios = Integer.parseInt(txt_numeroDeSocios.getText());
-                    if (numSocios <= 0) {
-                        error += "El número de socios no puede ser menor que 1\n"; // Cambié la forma de manejar el error
+                    numSocios=Integer.parseInt(txt_numeroDeSocios.getText());
+                    if(numSocios<=0) {
+                        throw new Exception();
                     }
-                } catch (NumberFormatException e) {
-                    error += "El número de socios debe ser un número\n";
+                }catch(NumberFormatException e) {
+                    error+="El numero de socios debe ser un numero\n";
+                } catch (Exception e) {
+                    error+="El numero de socios no puede ser menor que 1\n";
                 }
             }
         }
-        // Si hay errores, mostrar mensaje y detener el proceso
-        if (!error.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText(error);
-            alert.showAndWait();
-            return;
+        //Una vez validado
+        Alert al=new Alert(Alert.AlertType.INFORMATION);
+        al.setHeaderText(null);
+        // En el lugar donde llamas a aniadirAeropuerto
+        if(ListarAeropuertoController.isEsAniadir()) {
+            aniadirAeropuerto(error, nombre, pais, ciudad, calle, numero, anioInauguracion, capacidad, esPublico,
+                    financiacion, numTrabajadores, numSocios, existe, al);
+        }else {
+            modificarAeropuerto(error, nombre, pais, ciudad, calle, numero, anioInauguracion, capacidad, esPublico,
+                    financiacion, numTrabajadores, numSocios, existe, al);
         }
-        // Crear el aeropuerto correspondiente
-        DaoAeropuerto daoAeropuerto = new DaoAeropuerto();
-        if (esPublico) {
-            // Crear objeto aeropuerto público
-            ModelAeropuertoPublico aeropuertoPublico = new ModelAeropuertoPublico(nombre, pais, ciudad, calle, numero, anioInauguracion, capacidad, financiacion, numTrabajadores);
-
-            // Verificar si el aeropuerto ya existe
-            existe = daoAeropuerto.existeAeropuerto(aeropuertoPublico);
-
-            if (existe) {
-                // Se edita el aeropuerto existente
-                daoAeropuerto.editarAeropuerto(aeropuertoPublico);
-            } else {
-                // Se añade un nuevo aeropuerto
-                daoAeropuerto.anadirAeropuerto(aeropuertoPublico);
-            }
-
-            // Actualizar la tabla de aeropuertos públicos
-            tablaPublico.getItems().clear();
-            tablaPublico.getItems().addAll(daoAeropuerto.leerAeropuertosPublicos());
-        } else {
-            // Crear objeto aeropuerto privado
-            ModelAeropuertoPrivado aeropuertoPrivado = new ModelAeropuertoPrivado(nombre, pais, ciudad, calle, numero, anioInauguracion, capacidad, numSocios);
-            DaoAeropuertoPrivado daoAeropuertoPrivado = new DaoAeropuertoPrivado();
-
-            // Verificar si el aeropuerto privado ya existe
-            existe = daoAeropuertoPrivado.existeAeropuerto(aeropuertoPrivado);
-
-            if (existe) {
-                // Se edita el aeropuerto privado existente
-                daoAeropuertoPrivado.editarAeropuerto(aeropuertoPrivado);
-            } else {
-                // Se añade un nuevo aeropuerto privado
-                daoAeropuertoPrivado.anadirAeropuerto(aeropuertoPrivado);
-            }
-            // Actualizar la tabla de aeropuertos privados
-            tablaPrivado.getItems().clear();
-            tablaPrivado.getItems().addAll(daoAeropuertoPrivado.leerAeropuertosPrivados());
-        }
-        // Cierra el formulario
-        cancelar(event);
+        al.showAndWait();
+        tablaPrivado.getSelectionModel().clearSelection();
+        tablaPublico.getSelectionModel().clearSelection();
+        ListarAeropuertoController.getS().close();
     }
+    void aniadirAeropuerto(String error, String nombre, String pais, String ciudad, String calle, int numero,
+                           int anioInauguracion, int capacidad, boolean esPublico, float financiacion, int numTrabajadores,
+                           int numSocios, boolean existe, Alert al) {
+        existe = validarExistencia(nombre, pais, ciudad, calle, numero, anioInauguracion, capacidad, esPublico,
+                financiacion, numTrabajadores, numSocios, existe);
+        if(error.equals("")&&!existe) {
+            Integer idDireccion=DaoDireccion.conseguirID(pais, ciudad, calle, numero);
+            if(idDireccion==null) {
+                DaoDireccion.aniadir(pais, ciudad, calle, numero);
+                idDireccion=DaoDireccion.conseguirID(pais, ciudad, calle, numero);
+            }
+            Integer idAeropuerto=DaoAeropuerto.conseguirID(nombre, anioInauguracion, capacidad, idDireccion, null);
+            if(idAeropuerto==null) {
+                DaoAeropuerto.aniadir(nombre, anioInauguracion, capacidad, idDireccion, null);
+                idAeropuerto=DaoAeropuerto.conseguirID(nombre, anioInauguracion, capacidad,idDireccion, null);
+            }
+            if(esPublico) {
+                DaoAeropuertoPublico.aniadir(idAeropuerto, financiacion, numTrabajadores);
+                ListarAeropuertoController.setListaTodasPublico(DaoAeropuertoPublico.cargarListaAeropuertosPublicos());
+                tablaPublico.refresh();
+            }else {
+                DaoAeropuertoPrivado.aniadir(idAeropuerto, numSocios);
+                ListarAeropuertoController.setListaTodasPrivado(DaoAeropuertoPrivado.cargarListaAeropuertosPrivados());
+                tablaPrivado.refresh();
+            }
+            al.setContentText("Aeropuerto añadido correctamente");
+        }else {
+            if(error.equals("")) {
+                al.setAlertType(AlertType.WARNING);
+                error="La persona ya estaba en la lista";
+            }else {
+                al.setAlertType(AlertType.ERROR);
+            }
+            al.setContentText(error);
+        }
+    }
+
+    /**
+     * Valida si un aeropuerto ya existe en la lista de aeropuertos.
+     *
+     * Este método comprueba si un aeropuerto, dado sus atributos, ya está presente
+     * en la lista de aeropuertos públicos o privados. Se crea una instancia del aeropuerto
+     * según el tipo (público o privado) y se compara con los existentes en las listas correspondientes.
+     *
+     * @param nombre            El nombre del aeropuerto.
+     * @param pais              El país del aeropuerto.
+     * @param ciudad            La ciudad del aeropuerto.
+     * @param calle             La calle del aeropuerto.
+     * @param numero            El número de la calle del aeropuerto.
+     * @param anioInauguracion  El año en que se inauguró el aeropuerto.
+     * @param capacidad         La capacidad del aeropuerto.
+     * @param esPublico         Un booleano que indica si el aeropuerto es público.
+     * @param financiacion      La cantidad de financiación para aeropuertos públicos.
+     * @param numTrabajadores   El número de trabajadores para aeropuertos públicos.
+     * @param numSocios        El número de socios para aeropuertos privados.
+     * @param existe            Un booleano que indica si el aeropuerto ya existe (se pasa por referencia).
+     * @return true si el aeropuerto ya existe en la lista; false en caso contrario.
+     */
+    boolean validarExistencia(String nombre, String pais, String ciudad, String calle, int numero, int anioInauguracion,
+                              int capacidad, boolean esPublico, float financiacion, int numTrabajadores, int numSocios, boolean existe) {
+        if(esPublico) {
+            ModelAeropuertoPublico aeropuerto=new ModelAeropuertoPublico(nombre, anioInauguracion, capacidad, new ModelDireccion(pais, ciudad, calle, numero), null, financiacion, numTrabajadores);
+            for(ModelAeropuertoPublico airport:ListarAeropuertoController.getListaTodasPublico()) {
+                if(airport.equals(aeropuerto)) {
+                    existe=true;
+                }
+            }
+        }else {
+            ModelAeropuertoPrivado aeropuerto=new ModelAeropuertoPrivado(nombre, anioInauguracion, capacidad, new ModelDireccion(pais, ciudad, calle, numero), null, numSocios);
+            for(ModelAeropuertoPrivado airport:ListarAeropuertoController.getListaTodasPrivado()) {
+                if(airport.equals(aeropuerto)) {
+                    existe=true;
+                }
+            }
+        }
+        return existe;
+    }
+
+    /**
 
 
         /**
@@ -341,5 +426,45 @@ public class AniadirYEditarAeropuertoController {
             error += "El campo ciudad es obligatorio\n";
         }
         return error;
+    }
+    void modificarAeropuerto(String error, String nombre, String pais, String ciudad, String calle, int numero,
+                             int anioInauguracion, int capacidad, boolean esPublico, float financiacion, int numTrabajadores,
+                             int numSocios, boolean existe, Alert al) {
+        existe = validarExistencia(nombre, pais, ciudad, calle, numero, anioInauguracion, capacidad, esPublico,
+                financiacion, numTrabajadores, numSocios, existe);
+        if(!existe&&error.equals("")) {
+            Integer idDireccion=DaoDireccion.conseguirID(pais, ciudad, calle, numero);
+            if(idDireccion==null) {
+                DaoDireccion.aniadir(pais, ciudad, calle, numero);
+                idDireccion=DaoDireccion.conseguirID(pais, ciudad, calle, numero);
+            }
+            Integer idAeropuerto=DaoAeropuerto.conseguirID(nombre, anioInauguracion, capacidad, idDireccion, null);
+            if(idAeropuerto==null) {
+                if(esPublico) {
+                    DaoAeropuerto.modificarPorId(tablaPublico.getSelectionModel().getSelectedItem().getId(), nombre, anioInauguracion, capacidad, idDireccion, null);
+                }else {
+                    DaoAeropuerto.modificarPorId(tablaPrivado.getSelectionModel().getSelectedItem().getId(), nombre, anioInauguracion, capacidad, idDireccion, null);
+                }
+                idAeropuerto=DaoAeropuerto.conseguirID(nombre, anioInauguracion, capacidad,idDireccion, null);
+            }
+            if(esPublico) {
+                DaoAeropuertoPublico.modificarPorID(idAeropuerto, financiacion, numTrabajadores);
+                ListarAeropuertoController.setListaTodasPublico(DaoAeropuertoPublico.cargarListaAeropuertosPublicos());
+                tablaPublico.refresh();
+            }else {
+                DaoAeropuertoPrivado.modificarPorID(idAeropuerto, numSocios);
+                ListarAeropuertoController.setListaTodasPrivado(DaoAeropuertoPrivado.cargarListaAeropuertosPrivados());
+                tablaPrivado.refresh();
+            }
+            al.setContentText("Aeropuerto modificado correctamente");
+        }else {
+            if(error.equals("")) {
+                al.setAlertType(AlertType.WARNING);
+                error="La persona ya estaba en la lista";
+            }else {
+                al.setAlertType(AlertType.ERROR);
+            }
+            al.setContentText(error);
+        }
     }
 }
