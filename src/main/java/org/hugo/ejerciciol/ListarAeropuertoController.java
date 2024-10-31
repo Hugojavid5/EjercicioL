@@ -1,13 +1,22 @@
 package org.hugo.ejerciciol;
-import Model.ModelAeropuertoPrivado;
+import BBDD.ConexionBBDD;
+import Dao.DaoAeropuerto;
+import Dao.DaoAeropuertoPrivado;
+import Dao.DaoAeropuertoPublico;
 import Model.ModelAeropuertoPublico;
+import Model.ModelAeropuertoPrivado;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+
+import java.sql.SQLException;
 public class ListarAeropuertoController {
 
     @FXML
@@ -97,45 +106,51 @@ public class ListarAeropuertoController {
     private boolean esPublico = true;
     private static Stage s;
     @FXML
-    public void initialize() {
-        // Inicializa las listas de datos y carga la tabla según el tipo de aeropuerto seleccionado
-        cargarTabla();
-    }
-    @FXML
-    void cargarTabla() {
-        if (rb_publicos.isSelected()) {
-            esPublico = true;
-            cargarTablaPublico();
-        } else {
-            esPublico = false;
-            cargarTablaPrivado();
+    private void initialize() {
+        try {
+            ConexionBBDD con=new ConexionBBDD();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    }
-    private void cargarTablaPublico() {
-        // Realiza la consulta de datos y asigna los datos a la tabla de aeropuertos públicos
-        listaTodasPublico = FXCollections.observableArrayList( /* consulta a la base de datos */ );
-        filtroPublico = new FilteredList<>(listaTodasPublico, p -> true);
-        tablaPublico.setItems(filtroPublico);
-        tablaPublico.setVisible(true);
-        tablaPrivado.setVisible(false);
-    }
-    private void cargarTablaPrivado() {
-        // Realiza la consulta de datos y asigna los datos a la tabla de aeropuertos privados
-        listaTodasPrivado = FXCollections.observableArrayList( /* consulta a la base de datos */ );
-        filtroPrivado = new FilteredList<>(listaTodasPrivado, p -> true);
-        tablaPrivado.setItems(filtroPrivado);
-        tablaPublico.setVisible(false);
-        tablaPrivado.setVisible(true);
-    }
+        txt_nombre.setOnKeyReleased(event -> accionFiltrar());
+        //Tabla publico
+        listaTodasPublico= DaoAeropuertoPublico.cargarListaAeropuertosPublicos();
+        tablaPublico.setItems(listaTodasPublico);
+        tcAnioPublico.setCellValueFactory(new PropertyValueFactory<>("anioInauguracion"));
+        tcCallePublico.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getDireccion().getCalle()));
+        tcCapacidadPublico.setCellValueFactory(new PropertyValueFactory<>("capacidad"));
+        tcCiudadPublico.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getDireccion().getCiudad()));
+        tcFinanciacion.setCellValueFactory(new PropertyValueFactory<>("financiacion"));
+        tcIdPublico.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tcNombrePublico.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        tcNumeroPublico.setCellValueFactory(cellData ->
+                new SimpleIntegerProperty(cellData.getValue().getDireccion().getNumero()).asObject());
+        tcPaisPublico.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getDireccion().getPais()));
+        tcNumeroTrabajadores.setCellValueFactory(new PropertyValueFactory<>("numTrabajadores"));
+        filtroPublico=new FilteredList<ModelAeropuertoPublico>(listaTodasPublico);
 
+        tcAnioPrivado.setCellValueFactory(new PropertyValueFactory<>("anioInauguracion"));
+        tcCallePrivado.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getDireccion().getCalle()));
+        tcCapacidadPrivado.setCellValueFactory(new PropertyValueFactory<>("capacidad"));
+        tcCiudadPrivado.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getDireccion().getCiudad()));
+        tcIdPrivado.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tcNombrePrivado.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        tcNumeroPrivado.setCellValueFactory(cellData ->
+                new SimpleIntegerProperty(cellData.getValue().getDireccion().getNumero()).asObject());
+        tcPaisPrivado.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getDireccion().getPais()));
+        tcNumeroSocios.setCellValueFactory(new PropertyValueFactory<>("numSocios"));
+        listaTodasPrivado= DaoAeropuertoPrivado.cargarListaAeropuertosPrivados();
+        filtroPrivado=new FilteredList<ModelAeropuertoPrivado>(listaTodasPrivado);
+        tablaPrivado.setItems(listaTodasPrivado);
+    }
     @FXML
-    void filtrarPorNombre(ActionEvent event) {
-        String filtroNombre = txt_nombre.getText().toLowerCase();
-        if (esPublico) {
-            filtroPublico.setPredicate(aeropuerto -> aeropuerto.getNombre().toLowerCase().contains(filtroNombre));
-        } else {
-            filtroPrivado.setPredicate(aeropuerto -> aeropuerto.getNombre().toLowerCase().contains(filtroNombre));
-        }
+    private void accionFiltrar() {
     }
     // Métodos de acción del menú
     @FXML
@@ -168,5 +183,15 @@ public class ListarAeropuertoController {
     @FXML
     void informacionAeropuerto(ActionEvent event) {
         // Lógica para mostrar información detallada de un aeropuerto
+    }
+    public void cargarTabla(ActionEvent actionEvent) {
+        esPublico=rb_publicos.isSelected();
+        if(rb_publicos.isSelected()) {
+            tablaPublico.setVisible(true);
+            tablaPrivado.setVisible(false);
+        }else {
+            tablaPublico.setVisible(false);
+            tablaPrivado.setVisible(true);;
+        }
     }
 }

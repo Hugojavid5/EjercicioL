@@ -6,4 +6,6 @@ module org.hugo.ejerciciol {
 
     opens org.hugo.ejerciciol to javafx.fxml;
     exports org.hugo.ejerciciol;
+    opens Model to javafx.base;
+    exports Model;
 }
