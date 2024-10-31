@@ -218,6 +218,8 @@ public class ListarAeropuertoController {
             AniadirYEditarAeropuertoController controller = controlador.getController();
             controller.setTablaPrivado(tablaPrivado);
             controller.setTablaPublico(tablaPublico);
+            controller.getRbPublico().setVisible(true);
+            controller.getRbPrivado().setVisible(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -228,6 +230,7 @@ public class ListarAeropuertoController {
         filtrarPorNombre();
         tablaPublico.refresh();
         tablaPrivado.refresh();
+        initialize();
         }
 
     @FXML
@@ -271,8 +274,9 @@ public class ListarAeropuertoController {
                     }
                 }
             }
+            initialize();
         }else {
-            Alert al=new Alert(Alert.AlertType.ERROR);
+            Alert al = new Alert(Alert.AlertType.ERROR);
             al.setHeaderText(null);
             al.setContentText("No hay ninguno seleccionado, asi que no se puede eliminar ninguno");
             al.showAndWait();
@@ -292,6 +296,8 @@ public class ListarAeropuertoController {
                 AniadirYEditarAeropuertoController controller = controlador.getController();
                 controller.setTablaPrivado(tablaPrivado);
                 controller.setTablaPublico(tablaPublico);
+                controller.getRbPublico().setVisible(false);
+                controller.getRbPrivado().setVisible(false);
                 if(esPublico) {
                     ModelAeropuertoPublico modelo=tablaPublico.getSelectionModel().getSelectedItem();
                     controller.setTxtAnioInauguracionText(modelo.getAnioInauguracion()+"") ;
@@ -330,6 +336,7 @@ public class ListarAeropuertoController {
             al.setContentText("NINGUN AEROPUERTO SELECCIONADO");
             al.showAndWait();
         }
+        initialize();
     }
 
 
