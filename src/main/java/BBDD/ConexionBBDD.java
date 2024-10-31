@@ -8,19 +8,14 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class ConexionBBDD {
-    private final Connection connection;
+    private static Connection connection;
     public ConexionBBDD() throws SQLException {
-        Properties connConfig = new Properties();
-        connConfig.setProperty("user", "root");
-        connConfig.setProperty("password", "mypass");
-        connection = DriverManager.getConnection(
-                "jdbc:mariadb://127.0.0.1:33066/aeropuertos?serverTimezone=Europe/Madrid",
-                connConfig
-        );
+        Properties connConfig = loadProperties();
+        String url=connConfig.getProperty("dburl");
+        connection = DriverManager.getConnection(url, connConfig);
         connection.setAutoCommit(true);
-        DatabaseMetaData databaseMetaData = connection.getMetaData();
     }
-    public Connection getConnection() {
+    public static Connection getConnection() {
         return connection;
     }
     public Connection CloseConexion() throws SQLException {
