@@ -5,9 +5,9 @@ public class ModelAvion {
     private String modelo;
     private int numeroAsientos;
     private int velocidadMaxima;
-    private boolean activado;
+    private int activado; // Cambiado a int para representar 1 (activo) o 0 (inactivo)
     private int idAeropuerto;
-    public ModelAvion(int id, String modelo, int numeroAsientos, int velocidadMaxima, boolean activado, int idAeropuerto)
+    public ModelAvion(int id, String modelo, int numeroAsientos, int velocidadMaxima, int activado, int idAeropuerto)
     {
         this.id = id;
         this.modelo = modelo;
@@ -57,15 +57,9 @@ public class ModelAvion {
         this.velocidadMaxima = velocidadMaxima;
     }
 
-    public boolean isActivado()
-    {
-        return activado;
-    }
+    public int getActivado() { return activado; }
 
-    public void setActivado(boolean activado)
-    {
-        this.activado = activado;
-    }
+    public void setActivado(int activado) { this.activado = activado; }
 
     public int getIdAeropuerto()
     {

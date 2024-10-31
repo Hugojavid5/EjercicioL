@@ -69,7 +69,7 @@
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                     <children>
                         <Label text="Nombre:" />
-                        <TextField />
+                        <TextField fx:id="txt_nombre" onAction="#filtrarPorNombre" />
                     </children>
                 </HBox>
             </children>
