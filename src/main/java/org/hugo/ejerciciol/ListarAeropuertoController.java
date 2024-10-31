@@ -112,7 +112,7 @@ public class ListarAeropuertoController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        txt_nombre.setOnKeyReleased(event -> accionFiltrar());
+        txt_nombre.setOnKeyReleased(event -> filtrarPorNombre());
         //Tabla publico
         listaTodasPublico= DaoAeropuertoPublico.cargarListaAeropuertosPublicos();
         tablaPublico.setItems(listaTodasPublico);
@@ -150,7 +150,27 @@ public class ListarAeropuertoController {
         tablaPrivado.setItems(listaTodasPrivado);
     }
     @FXML
-    private void accionFiltrar() {
+    private void filtrarPorNombre() {
+        String filtroTexto = txt_nombre.getText().toLowerCase();
+        if (esPublico) {
+            filtroPublico.setPredicate(aeropuerto -> {
+                if (filtroTexto == null || filtroTexto.isEmpty()) {
+                    return true;
+                }
+                String nombreAeropuerto = aeropuerto.getNombre().toLowerCase();
+                return nombreAeropuerto.contains(filtroTexto);
+            });
+            tablaPublico.setItems(filtroPublico);
+        } else {
+            filtroPrivado.setPredicate(aeropuerto -> {
+                if (filtroTexto == null || filtroTexto.isEmpty()) {
+                    return true;
+                }
+                String nombreAeropuerto = aeropuerto.getNombre().toLowerCase();
+                return nombreAeropuerto.contains(filtroTexto);
+            });
+            tablaPrivado.setItems(filtroPrivado);
+        }
     }
     // Métodos de acción del menú
     @FXML
