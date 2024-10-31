@@ -1,78 +1,47 @@
 package Model;
-
+import java.sql.Blob;
+import java.util.Objects;
 public class ModelAeropuerto {
-    private int id;
-    private String nombre;
-    private int anioInauguracion;
-    private int capacidad;
-    private int idDireccion;
-    private byte[] imagen;
-
-    public ModelAeropuerto(int id, String nombre, int anioInauguracion, int capacidad, int idDireccion, byte[] imagen) {
-        this.id = id;
+    int id;
+    String nombre;
+    int anioInauguracion;
+    int capacidad;
+    ModelDireccion direccion;
+    Blob imagen;
+    public ModelAeropuerto(String nombre, int anioInauguracion, int capacidad, ModelDireccion direccion, Blob imagen) {
+        super();
         this.nombre = nombre;
         this.anioInauguracion = anioInauguracion;
         this.capacidad = capacidad;
-        this.idDireccion = idDireccion;
+        this.direccion = direccion;
         this.imagen = imagen;
     }
-    public int getId()
-    {
-        return id;
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    public String getNombre() { return nombre; }
+    public int getAnioInauguracion() { return anioInauguracion; }
+    public int getCapacidad() { return capacidad; }
+    public ModelDireccion getDireccion() { return direccion; }
+    public Blob getImagen() { return imagen; }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ModelAeropuerto other = (ModelAeropuerto) obj;
+        return anioInauguracion == other.anioInauguracion && capacidad == other.capacidad
+                && Objects.equals(direccion, other.direccion) && id == other.id && Objects.equals(imagen, other.imagen)
+                && Objects.equals(nombre, other.nombre);
     }
-
-    public void setId(int id)
-    {
-        this.id = id;
+    @Override
+    public int hashCode() {
+        return Objects.hash(anioInauguracion, capacidad, direccion, id, imagen, nombre);
     }
-
-    public String getNombre()
-    {
-        return nombre;
-    }
-
-    public void setNombre(String nombre)
-    {
-        this.nombre = nombre;
-    }
-
-    public int getAnioInauguracion()
-    {
-        return anioInauguracion;
-    }
-
-    public void setAnioInauguracion(int anioInauguracion)
-    {
-        this.anioInauguracion = anioInauguracion;
-    }
-
-    public int getCapacidad()
-    {
-        return capacidad;
-    }
-
-    public void setCapacidad(int capacidad)
-    {
-        this.capacidad = capacidad;
-    }
-
-    public int getIdDireccion()
-    {
-        return idDireccion;
-    }
-
-    public void setIdDireccion(int idDireccion)
-    {
-        this.idDireccion = idDireccion;
-    }
-
-    public byte[] getImagen()
-    {
-        return imagen;
-    }
-
-    public void setImagen(byte[] imagen)
-    {
-        this.imagen = imagen;
+    @Override
+    public String toString() {
+        return this.nombre;
     }
 }
