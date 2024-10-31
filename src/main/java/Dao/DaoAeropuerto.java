@@ -63,13 +63,13 @@ public class DaoAeropuerto {
     }
 
     public static void eliminar(int id) {
-        connection = ConexionBBDD.getConnection();
-        String delete = "DELETE FROM aeropuertos WHERE id=?";
+        connection=ConexionBBDD.getConnection();
+        String delete="DELETE FROM aeropuertos WHERE id=?";
         try {
-            PreparedStatement pstmt = connection.prepareStatement(delete);
-            pstmt.setInt(1, id);
+            PreparedStatement pstmt=connection.prepareStatement(delete);
+            pstmt.setInt(1,id);
             pstmt.executeUpdate();
-        } catch (SQLException e) {
+        }catch(SQLException e) {
             e.printStackTrace();
         }
     }

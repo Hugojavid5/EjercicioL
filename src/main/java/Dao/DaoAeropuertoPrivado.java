@@ -29,7 +29,17 @@ public class DaoAeropuertoPrivado {
         }
         return lst;
     }
-
+    public static void eliminar(int id) {
+        conection=ConexionBBDD.getConnection();
+        String delete="DELETE FROM aeropuertos_privados WHERE id_aeropuerto=?";
+        try {
+            PreparedStatement pstmt=conection.prepareStatement(delete);
+            pstmt.setInt(1,id);
+            pstmt.executeUpdate();
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public static void insertarAeropuertoPrivado(ModelAeropuertoPrivado aeropuertoPrivado) throws SQLException {
         String sql = "INSERT INTO aeropuertos_privados (nombre, calle, ciudad, pais, numero, anio_inauguracion, capacidad, num_socios) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = ConexionBBDD.getConnection();

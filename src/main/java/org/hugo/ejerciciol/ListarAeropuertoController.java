@@ -133,18 +133,14 @@ public class ListarAeropuertoController {
         listaTodasPublico= DaoAeropuertoPublico.cargarListaAeropuertosPublicos();
         tablaPublico.setItems(listaTodasPublico);
         tcAnioPublico.setCellValueFactory(new PropertyValueFactory<>("anioInauguracion"));
-        tcCallePublico.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getDireccion().getCalle()));
+        tcCallePublico.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDireccion().getCalle()));
         tcCapacidadPublico.setCellValueFactory(new PropertyValueFactory<>("capacidad"));
-        tcCiudadPublico.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getDireccion().getCiudad()));
+        tcCiudadPublico.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDireccion().getCiudad()));
         tcFinanciacion.setCellValueFactory(new PropertyValueFactory<>("financiacion"));
         tcIdPublico.setCellValueFactory(new PropertyValueFactory<>("id"));
         tcNombrePublico.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        tcNumeroPublico.setCellValueFactory(cellData ->
-                new SimpleIntegerProperty(cellData.getValue().getDireccion().getNumero()).asObject());
-        tcPaisPublico.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getDireccion().getPais()));
+        tcNumeroPublico.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getDireccion().getNumero()).asObject());
+        tcPaisPublico.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDireccion().getPais()));
         tcNumeroTrabajadores.setCellValueFactory(new PropertyValueFactory<>("numTrabajadores"));
         filtroPublico=new FilteredList<ModelAeropuertoPublico>(listaTodasPublico);
 
@@ -152,14 +148,11 @@ public class ListarAeropuertoController {
         tcCallePrivado.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getDireccion().getCalle()));
         tcCapacidadPrivado.setCellValueFactory(new PropertyValueFactory<>("capacidad"));
-        tcCiudadPrivado.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getDireccion().getCiudad()));
+        tcCiudadPrivado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDireccion().getCiudad()));
         tcIdPrivado.setCellValueFactory(new PropertyValueFactory<>("id"));
         tcNombrePrivado.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        tcNumeroPrivado.setCellValueFactory(cellData ->
-                new SimpleIntegerProperty(cellData.getValue().getDireccion().getNumero()).asObject());
-        tcPaisPrivado.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getDireccion().getPais()));
+        tcNumeroPrivado.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getDireccion().getNumero()).asObject());
+        tcPaisPrivado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDireccion().getPais()));
         tcNumeroSocios.setCellValueFactory(new PropertyValueFactory<>("numSocios"));
         listaTodasPrivado= DaoAeropuertoPrivado.cargarListaAeropuertosPrivados();
         filtroPrivado=new FilteredList<ModelAeropuertoPrivado>(listaTodasPrivado);
@@ -256,7 +249,34 @@ public class ListarAeropuertoController {
     }
     @FXML
     void borrarAeropuerto(ActionEvent event) {
-        // Lógica para borrar un aeropuerto
+        if(tablaPrivado.getSelectionModel().getSelectedItem()!=null||tablaPublico.getSelectionModel().getSelectedItem()!=null) {
+            Alert al=new Alert(Alert.AlertType.CONFIRMATION);
+            al.setHeaderText(null);
+            if(tablaPrivado.getSelectionModel().getSelectedItem()!=null||tablaPublico.getSelectionModel().getSelectedItem()!=null) {
+                al.setContentText("¿Estas seguro de que quieres borrar ese aeropuerto?");
+                al.showAndWait();
+                if(al.getResult().getButtonData().name().equals("OK_DONE")) {
+                    if(esPublico) {
+                        DaoAeropuertoPublico.eliminar(tablaPublico.getSelectionModel().getSelectedItem().getId());
+                        DaoAeropuerto.eliminar(tablaPublico.getSelectionModel().getSelectedItem().getId());
+                        listaTodasPublico=DaoAeropuertoPublico.cargarListaAeropuertosPublicos();
+                        filtrarPorNombre();
+                        tablaPublico.refresh();
+                    }else {
+                        DaoAeropuertoPrivado.eliminar(tablaPrivado.getSelectionModel().getSelectedItem().getId());
+                        DaoAeropuerto.eliminar(tablaPrivado.getSelectionModel().getSelectedItem().getId());
+                        listaTodasPrivado=DaoAeropuertoPrivado.cargarListaAeropuertosPrivados();
+                        filtrarPorNombre();
+                        tablaPrivado.refresh();
+                    }
+                }
+            }
+        }else {
+            Alert al=new Alert(Alert.AlertType.ERROR);
+            al.setHeaderText(null);
+            al.setContentText("No hay ninguno seleccionado, asi que no se puede eliminar ninguno");
+            al.showAndWait();
+        }
     }
     @FXML
     void editarAeropuerto(ActionEvent event) {
@@ -315,7 +335,21 @@ public class ListarAeropuertoController {
 
     @FXML
     void eliminarAvion(ActionEvent event) {
-        // Lógica para eliminar un avión
+        borrar=true;
+        s=new Stage();
+        Scene scene;
+        try {
+            FXMLLoader controlador = new FXMLLoader(HelloApplication.class.getResource("ActivarYDesactivarAvion.fxml"));
+            scene = new Scene(controlador.load());
+            s.setTitle("Elimina una avion");
+            s.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        s.setResizable(false);
+        s.initOwner(HelloApplication.getStage());
+        s.initModality(javafx.stage.Modality.WINDOW_MODAL);
+        s.showAndWait();
     }
 
     @FXML
