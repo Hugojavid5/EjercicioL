@@ -12,15 +12,15 @@ public class DaoAeropuertoPrivado {
 
     private static Connection conection;
 
-    public static ObservableList<ModelAeropuertoPrivado> cargarListaAeropuertosPrivados(){
-        ObservableList<ModelAeropuertoPrivado>lst=FXCollections.observableArrayList();
+    public static ObservableList<ModelAeropuertoPrivado> cargarListaAeropuertosPrivados() {
+        ObservableList<ModelAeropuertoPrivado> lst = FXCollections.observableArrayList();
         try {
-            conection=ConexionBBDD.getConnection();
-            String select="SELECT id,numero_socios,nombre,anio_inauguracion,capacidad,id_direccion,imagen FROM aeropuertos_privados,aeropuertos WHERE id=id_aeropuerto";
+            conection = ConexionBBDD.getConnection();
+            String select = "SELECT id,numero_socios,nombre,anio_inauguracion,capacidad,id_direccion,imagen FROM aeropuertos_privados,aeropuertos WHERE id=id_aeropuerto";
             PreparedStatement pstmt = conection.prepareStatement(select);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                ModelAeropuertoPrivado modelo=new ModelAeropuertoPrivado(rs.getString("nombre"),rs.getInt("anio_inauguracion"),rs.getInt("capacidad"), DaoDireccion.crearModeloDireccionPorID(rs.getInt("id_direccion")), rs.getBlob("imagen"),rs.getInt("numero_socios"));
+                ModelAeropuertoPrivado modelo = new ModelAeropuertoPrivado(rs.getString("nombre"), rs.getInt("anio_inauguracion"), rs.getInt("capacidad"), DaoDireccion.crearModeloDireccionPorID(rs.getInt("id_direccion")), rs.getBlob("imagen"), rs.getInt("numero_socios"));
                 modelo.setId(rs.getInt("id"));
                 lst.add(modelo);
             }
@@ -28,6 +28,24 @@ public class DaoAeropuertoPrivado {
             e.printStackTrace();
         }
         return lst;
+    }
+
+    public static void insertarAeropuertoPrivado(ModelAeropuertoPrivado aeropuertoPrivado) throws SQLException {
+        String sql = "INSERT INTO aeropuertos_privados (nombre, calle, ciudad, pais, numero, anio_inauguracion, capacidad, num_socios) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = ConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            // Configurar los parámetros de la consulta con los valores del objeto
+            stmt.setString(1, aeropuertoPrivado.getNombre());
+            stmt.setString(2, aeropuertoPrivado.getDireccion().getCalle());
+            stmt.setString(3, aeropuertoPrivado.getDireccion().getCiudad());
+            stmt.setString(4, aeropuertoPrivado.getDireccion().getPais());
+            stmt.setInt(5, aeropuertoPrivado.getDireccion().getNumero());
+            stmt.setInt(6, aeropuertoPrivado.getAnioInauguracion());
+            stmt.setInt(7, aeropuertoPrivado.getCapacidad());
+            stmt.setInt(8, aeropuertoPrivado.getNumSocios());
+            // Ejecutar la inserción
+            stmt.executeUpdate();
+        }
     }
 
     public static void aniadir(int idAeropuerto,int numSocios) {
@@ -43,29 +61,5 @@ public class DaoAeropuertoPrivado {
             e.printStackTrace();
         }
     }
-    public static void modificarPorID(int id,int numSocios) {
-        conection=ConexionBBDD.getConnection();
-        String update="UPDATE aeropuertos_privados SET numero_socios=? WHERE id_aeropuerto=?";
-        try {
-            PreparedStatement pstmt;
-            pstmt=conection.prepareStatement(update);
-            pstmt.setInt(1, numSocios);
-            pstmt.setInt(2,id);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void eliminar(int id) {
-        conection=ConexionBBDD.getConnection();
-        String delete="DELETE FROM aeropuertos_privados WHERE id_aeropuerto=?";
-        try {
-            PreparedStatement pstmt=conection.prepareStatement(delete);
-            pstmt.setInt(1,id);
-            pstmt.executeUpdate();
-        }catch(SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }
+

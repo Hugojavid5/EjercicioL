@@ -102,13 +102,21 @@ public class ListarAeropuertoController {
     @FXML
     private TextField txt_nombre;
 
-    private ObservableList<ModelAeropuertoPrivado> listaTodasPrivado;
-    private ObservableList<ModelAeropuertoPublico> listaTodasPublico;
+    private static ObservableList<ModelAeropuertoPrivado> listaTodasPrivado;
+    private static ObservableList<ModelAeropuertoPublico> listaTodasPublico;
     private FilteredList<ModelAeropuertoPrivado> filtroPrivado;
     private FilteredList<ModelAeropuertoPublico> filtroPublico;
 
     private boolean esPublico = true;
     private static Stage s;
+    private static boolean esAniadir;
+    public static void setListaTodasPrivado(ObservableList<ModelAeropuertoPrivado> listaTodasPrivado) {
+        ListarAeropuertoController.listaTodasPrivado = listaTodasPrivado;
+    }
+    public static void setListaTodasPublico(ObservableList<ModelAeropuertoPublico> listaTodasPublico) {
+        ListarAeropuertoController.listaTodasPublico = listaTodasPublico;
+    }
+
     @FXML
     private void initialize() {
         try {
@@ -184,21 +192,29 @@ public class ListarAeropuertoController {
 
     @FXML
     void aniadirAeropuerto(ActionEvent event) {
+        esAniadir=true;
+        s=new Stage();
+        Scene scene;
         try {
-            // Carga el archivo FXML
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AniadirYEditarAeropuertos.fxml"));
-            Parent root = fxmlLoader.load();
-            // Configura el nuevo Stage para la ventana
-            Stage stage = new Stage();
-            stage.setTitle("Añadir o Editar Aeropuerto");
-            stage.setScene(new Scene(root));
-            // Muestra la ventana y espera a que el usuario la cierre antes de volver a la ventana principal
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
+            FXMLLoader controlador = new FXMLLoader(HelloApplication.class.getResource("AniadirYEditarAeropuertos.fxml"));
+            scene = new Scene(controlador.load());
+            s.setTitle("AVIONES - AÑADIR AEROPUERTO");
+            s.setScene(scene);
+            AniadirYEditarAeropuertoController controller = controlador.getController();
+            controller.setTablaPrivado(tablaPrivado);
+            controller.setTablaPublico(tablaPublico);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+        s.setResizable(false);
+        s.initOwner(HelloApplication.getStage());
+        s.initModality(javafx.stage.Modality.WINDOW_MODAL);
+        s.showAndWait();
+        filtrarPorNombre();
+        tablaPublico.refresh();
+        tablaPrivado.refresh();
+        }
+
     @FXML
     void aniadirAvion(ActionEvent event) {
         // Lógica para añadir un nuevo avión
@@ -230,5 +246,17 @@ public class ListarAeropuertoController {
             tablaPublico.setVisible(false);
             tablaPrivado.setVisible(true);;
         }
+    }
+    public static ObservableList<ModelAeropuertoPrivado> getListaTodasPrivado() {
+        return listaTodasPrivado;
+    }
+    public static ObservableList<ModelAeropuertoPublico> getListaTodasPublico() {
+        return listaTodasPublico;
+    }
+    public static Stage getS() {
+        return s;
+    }
+    public static boolean isEsAniadir() {
+        return esAniadir;
     }
 }
