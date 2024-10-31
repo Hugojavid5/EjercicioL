@@ -1,8 +1,6 @@
 package org.hugo.ejerciciol;
 import BBDD.ConexionBBDD;
-import Dao.DaoAeropuerto;
-import Dao.DaoAeropuertoPrivado;
-import Dao.DaoAeropuertoPublico;
+import Dao.*;
 import Model.ModelAeropuertoPublico;
 import Model.ModelAeropuertoPrivado;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -21,6 +19,8 @@ import javafx.scene.Scene;
 import java.io.IOException;
 import javafx.stage.Modality;
 import java.sql.SQLException;
+import Model.ModelAvion;
+
 public class ListarAeropuertoController {
 
     @FXML
@@ -286,7 +286,63 @@ public class ListarAeropuertoController {
 
     @FXML
     void informacionAeropuerto(ActionEvent event) {
-        // Lógica para mostrar información detallada de un aeropuerto
+        if(tablaPrivado.getSelectionModel().getSelectedItem()!=null||tablaPublico.getSelectionModel().getSelectedItem()!=null) {
+            Alert al=new Alert(Alert.AlertType.INFORMATION);
+            al.setHeaderText(null);
+            String str="";
+            if(tablaPrivado.getSelectionModel().getSelectedItem()!=null) {
+                ModelAeropuertoPrivado modelo = tablaPrivado.getSelectionModel().getSelectedItem();
+                str+="Nombre: "+modelo.getNombre()+"\n";
+                str+="Pais: "+modelo.getDireccion().getPais()+"\n";
+                str+="Direccion: C|"+modelo.getDireccion().getCalle()+" "+modelo.getDireccion().getNumero()+","+modelo.getDireccion().getCiudad()+"\n";
+                str+="Año de inauguracion: "+modelo.getAnioInauguracion()+"\n";
+                str+="Capacidad: "+modelo.getCapacidad()+"\n";
+                str+="Aviones:\n";
+                for(ModelAvion avion: DaoAvion.listaAviones(DaoAeropuerto.conseguirID(
+                        modelo.getNombre(),modelo.getAnioInauguracion(),modelo.getCapacidad(),
+                        DaoDireccion.conseguirID(modelo.getDireccion().getPais(),modelo.
+                                        getDireccion().getCiudad(),modelo.getDireccion().getCalle(),
+                                modelo.getDireccion().getNumero()), modelo.getImagen()))) {
+                    str+="\tModelo: "+avion.getModelo()+"\n";
+                    str+="\tNúmero de asientos: "+avion.getNumeroAsientos()+"\n";
+                    str+="\tVelocidad máxima: "+avion.getVelocidadMaxima()+"\n";
+                    if(avion.isActivado()) {
+                        str+="\tActivado\n";
+                    }else {
+                        str+="\tDesactivado\n";
+                    }
+                }
+                str+="Privado\n";
+                str+="Nº de socios: "+modelo.getNumSocios();
+            }else {
+                ModelAeropuertoPublico modelo=tablaPublico.getSelectionModel().getSelectedItem();
+                str+="Nombre: "+modelo.getNombre()+"\n";
+                str+="Pais: "+modelo.getDireccion().getPais()+"\n";
+                str+="Direccion: "+modelo.getDireccion().getCalle()+" "+modelo.getDireccion().getNumero()+","+modelo.getDireccion().getCiudad()+"\n";
+                str+="Año de inauguracion: "+modelo.getAnioInauguracion()+"\n";
+                str+="Capacidad: "+modelo.getCapacidad()+"\n";
+                str+="Aviones:\n";
+                for(ModelAvion avion:DaoAvion.listaAviones(DaoAeropuerto.conseguirID(
+                        modelo.getNombre(),modelo.getAnioInauguracion(),modelo.getCapacidad(),
+                        DaoDireccion.conseguirID(modelo.getDireccion().getPais(),modelo.
+                                        getDireccion().getCiudad(),modelo.getDireccion().getCalle(),
+                                modelo.getDireccion().getNumero()), modelo.getImagen()))) {
+                    str+="\tModelo: "+avion.getModelo()+"\n";
+                    str+="\tNúmero de asientos: "+avion.getNumeroAsientos()+"\n";
+                    str+="\tVelocidad máxima: "+avion.getVelocidadMaxima()+"\n";
+                    if(avion.isActivado()) {
+                        str+="\tActivado\n";
+                    }else {
+                        str+="\tDesactivado\n";
+                    }
+                }
+                str+="Público\n";
+                str+="Financiacion: "+modelo.getFinanciacion()+"\n";
+                str+="Número de trabajadores: "+modelo.getNumTrabajadores();
+            }
+            al.setContentText(str);
+            al.showAndWait();
+        }
     }
     public void cargarTabla(ActionEvent actionEvent) {
         esPublico=rb_publicos.isSelected();
