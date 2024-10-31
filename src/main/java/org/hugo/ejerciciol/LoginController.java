@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+
 import javafx.fxml.FXML;
 
 public class LoginController {
@@ -27,23 +28,11 @@ public class LoginController {
     private TextField txt_usuario;
 
     private DaoUsuario daoUsuario;
-    // Constructor para inicializar DaoUsuarios
-    public LoginController() {
-        ConexionBBDD bd;
-        try {
-            bd = new ConexionBBDD();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        Connection connection = bd.getConnection(); // Ajusta esto según tu implementación
-        daoUsuario = new DaoUsuario(connection);
-    }
     @FXML
     void login(ActionEvent event) {
         String usuario = txt_usuario.getText();
         String password = txt_password.getText();
 
-        // Comprobar si el usuario existe
         ModelUsuario usuarioModel = daoUsuario.getUsuario(usuario);
         if (usuarioModel != null && usuarioModel.getPassword().equals(password)) {
             // Usuario encontrado, cargar la pantalla de lista de aeropuertos
