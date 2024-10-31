@@ -13,7 +13,7 @@ public class DaoUsuario {
 
     public ModelUsuario getUsuario(String nombreUsuario) {
         ModelUsuario usuario = null;
-        String sql = "SELECT * FROM Usuario WHERE usuario = ?";
+        String sql = "SELECT * FROM usuarios  WHERE usuario = ?";
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
             stmt.setString(1, nombreUsuario);
             ResultSet rs = stmt.executeQuery();

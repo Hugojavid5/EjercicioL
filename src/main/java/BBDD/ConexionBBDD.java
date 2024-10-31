@@ -14,7 +14,7 @@ public class ConexionBBDD {
         connConfig.setProperty("user", "root");
         connConfig.setProperty("password", "mypass");
         connection = DriverManager.getConnection(
-                "jdbc:mariadb://127.0.0.1:33066/personas?serverTimezone=Europe/Madrid",
+                "jdbc:mariadb://127.0.0.1:33066/aeropuertos?serverTimezone=Europe/Madrid",
                 connConfig
         );
         connection.setAutoCommit(true);
