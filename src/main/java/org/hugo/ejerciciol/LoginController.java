@@ -2,11 +2,20 @@ package org.hugo.ejerciciol;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-public class LoginController {
-    public TextField txt_usuario;
-    public TextField txt_password;
-    public Button btt_login;
+import javafx.fxml.FXML;
 
-    public void login(ActionEvent actionEvent) {
+public class LoginController {
+
+    @FXML
+    private Button btt_login;
+
+    @FXML
+    private TextField txt_password;
+
+    @FXML
+    private TextField txt_usuario;
+
+    @FXML
+    void login(ActionEvent event) {
     }
 }

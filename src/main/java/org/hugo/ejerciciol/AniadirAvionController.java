@@ -4,18 +4,35 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 
 public class AniadirAvionController {
-    public TextField txt_modelo;
-    public TextField txt_asientos;
-    public TextField txt_velMaxima;
-    public ComboBox cb_aeropuerto;
-    public RadioButton rb_activado;
-    public ToggleGroup rb_grupo;
-    public RadioButton rb_desactivado;
 
+    @FXML
+    private ComboBox<?> cb_aeropuerto;
+
+    @FXML
+    private RadioButton rb_activado;
+
+    @FXML
+    private RadioButton rb_desactivado;
+
+    @FXML
+    private ToggleGroup rb_grupo;
+
+    @FXML
+    private TextField txt_asientos;
+    @FXML
+    private TextField txt_modelo;
+    @FXML
+    private TextField txt_velMaxima;
+
+    @FXML
+    void cancelar(ActionEvent event) {
+    }
+
+    @FXML
     public void guardar(ActionEvent actionEvent) {
     }
-    public void cancelar(ActionEvent actionEvent) {
-    }
+
 }

@@ -3,14 +3,33 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.fxml.FXML;
+
 public class ActivarYDesactivarAvionController {
-    public ToggleGroup rb_grupo;
-    public RadioButton rb_desactivado;
-    public RadioButton rb_activado;
-    public ComboBox cb_aeropuertos;
-    public ComboBox cb_aviones;
+
+    @FXML
+    private ComboBox<?> cb_aeropuertos;
+
+    @FXML
+    private ComboBox<?> cb_aviones;
+
+    @FXML
+    private RadioButton rb_activado;
+
+    @FXML
+    private RadioButton rb_desactivado;
+
+    @FXML
+    private ToggleGroup rb_grupo;
+
+    @FXML
+    void cancelar(ActionEvent event) {
+    }
+
+    @FXML
     public void guardar(ActionEvent actionEvent) {
     }
-    public void cancelar(ActionEvent actionEvent) {
-    }
+
+
+
 }

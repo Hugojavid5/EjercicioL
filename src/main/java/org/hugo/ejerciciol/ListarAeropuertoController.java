@@ -3,24 +3,46 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
+import javafx.fxml.FXML;
 public class ListarAeropuertoController {
-    public ToggleGroup grupoRB;
-    public RadioButton rb_privados;
-    public RadioButton rb_publicos;
-    public TableView tabla;
 
-    public void editarAeropuerto(ActionEvent actionEvent) {
+    @FXML
+    private ToggleGroup grupoRB;
+
+    @FXML
+    private RadioButton rb_privados;
+
+    @FXML
+    private RadioButton rb_publicos;
+
+    @FXML
+    private TableView<?> tabla;
+
+    @FXML
+    void activarDesactivarAvion(ActionEvent event) {
     }
-    public void informacionAeropuerto(ActionEvent actionEvent) {
+
+    @FXML
+    void aniadirAeropuerto(ActionEvent event) {
     }
-    public void borrarAeropuerto(ActionEvent actionEvent) {
+
+    @FXML
+    void aniadirAvion(ActionEvent event) {
     }
-    public void aniadirAeropuerto(ActionEvent actionEvent) {
+
+    @FXML
+    void borrarAeropuerto(ActionEvent event) {
     }
-    public void activarDesactivarAvion(ActionEvent actionEvent) {
+
+    @FXML
+    void eliminarAvion(ActionEvent event) {
     }
-    public void aniadirAvion(ActionEvent actionEvent) {
+
+    @FXML
+    void informacionAeropuerto(ActionEvent event) {
     }
-    public void eliminarAvion(ActionEvent actionEvent) {
+
+    @FXML
+    void editarAeropuerto(ActionEvent event) {
     }
 }
