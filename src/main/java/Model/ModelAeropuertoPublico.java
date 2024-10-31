@@ -32,4 +32,5 @@ public class ModelAeropuertoPublico extends ModelAeropuerto{
                 && Objects.equals(direccion, other.direccion) && id == other.id && Objects.equals(imagen, other.imagen)
                 && Objects.equals(nombre, other.nombre);
     }
+
 }

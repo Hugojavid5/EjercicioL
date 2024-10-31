@@ -49,6 +49,48 @@ public class AniadirYEditarAeropuertoController {
     @FXML
     private TextField txt_numeroDeSocios;
 
+    public void setTxtAnioInauguracionText(String anio) {
+        txt_anioDeInauguracion.setText(anio);
+    }
+
+    public void setTxtCalleText(String calle) {
+        txt_calle.setText(calle);
+    }
+
+    public void setTxtCapacidadText(String capacidad) {
+        txt_capacidad.setText(capacidad);
+    }
+
+    public void setTxtCiudadText(String ciudad) {
+        txt_ciudad.setText(ciudad);
+    }
+
+    public void setTxtFinanciacionText(String financiacion) {
+        txt_financiacion.setText(financiacion);
+    }
+
+    public void setTxtNombreText(String nombre) {
+        txt_nombre.setText(nombre);
+    }
+
+    public void setTxtNumeroText(String numero) {
+        txt_numero.setText(numero);
+    }
+
+    public void setTxtNumTrabajadoresText(String numTrabajadores) {
+        txt_trabajadores.setText(numTrabajadores);
+    }
+
+    public void setTxtPaisText(String pais) {
+        txt_pais.setText(pais);
+    }
+
+    public void setTxtNumSociosText(String numSocios) {
+        txt_numeroDeSocios.setText(numSocios);
+    }
+
+
+
     private TableView<ModelAeropuertoPrivado> tablaPrivado;
     private TableView<ModelAeropuertoPublico> tablaPublico;
     public void setTablaPrivado(TableView<ModelAeropuertoPrivado> tablaPrivado) {
@@ -191,9 +233,46 @@ public class AniadirYEditarAeropuertoController {
         ListarAeropuertoController.getS().close();
     }
 
-    private void modificarAeropuerto(String error, String nombre, String pais, String ciudad, String calle, int numero, int anioInauguracion, int capacidad, boolean esPublico, float financiacion, int numTrabajadores, int numSocios, boolean existe, Alert al) {
+    void modificarAeropuerto(String error, String nombre, String pais, String ciudad, String calle, int numero,
+                             int anioInauguracion, int capacidad, boolean esPublico, float financiacion, int numTrabajadores,
+                             int numSocios, boolean existe, Alert al) {
+        existe = validarExistencia(nombre, pais, ciudad, calle, numero, anioInauguracion, capacidad, esPublico,
+                financiacion, numTrabajadores, numSocios, existe);
+        if(!existe&&error.equals("")) {
+            Integer idDireccion=DaoDireccion.conseguirID(pais, ciudad, calle, numero);
+            if(idDireccion==null) {
+                DaoDireccion.aniadir(pais, ciudad, calle, numero);
+                idDireccion=DaoDireccion.conseguirID(pais, ciudad, calle, numero);
+            }
+            Integer idAeropuerto=DaoAeropuerto.conseguirID(nombre, anioInauguracion, capacidad, idDireccion, null);
+            if(idAeropuerto==null) {
+                if(esPublico) {
+                    DaoAeropuerto.modificarPorId(tablaPublico.getSelectionModel().getSelectedItem().getId(), nombre, anioInauguracion, capacidad, idDireccion, null);
+                }else {
+                    DaoAeropuerto.modificarPorId(tablaPrivado.getSelectionModel().getSelectedItem().getId(), nombre, anioInauguracion, capacidad, idDireccion, null);
+                }
+                idAeropuerto=DaoAeropuerto.conseguirID(nombre, anioInauguracion, capacidad,idDireccion, null);
+            }
+            if(esPublico) {
+                DaoAeropuertoPublico.modificarPorID(idAeropuerto, financiacion, numTrabajadores);
+                ListarAeropuertoController.setListaTodasPublico(DaoAeropuertoPublico.cargarListaAeropuertosPublicos());
+                tablaPublico.refresh();
+            }else {
+                DaoAeropuertoPrivado.modificarPorID(idAeropuerto, numSocios);
+                ListarAeropuertoController.setListaTodasPrivado(DaoAeropuertoPrivado.cargarListaAeropuertosPrivados());
+                tablaPrivado.refresh();
+            }
+            al.setContentText("Aeropuerto modificado correctamente");
+        }else {
+            if(error.equals("")) {
+                al.setAlertType(AlertType.WARNING);
+                error="La persona ya estaba en la lista";
+            }else {
+                al.setAlertType(AlertType.ERROR);
+            }
+            al.setContentText(error);
+        }
     }
-
     void aniadirAeropuerto(String error, String nombre, String pais, String ciudad, String calle, int numero,
                            int anioInauguracion, int capacidad, boolean esPublico, float financiacion, int numTrabajadores,
                            int numSocios, boolean existe, Alert al) {

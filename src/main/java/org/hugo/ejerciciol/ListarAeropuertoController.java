@@ -107,9 +107,10 @@ public class ListarAeropuertoController {
     private FilteredList<ModelAeropuertoPrivado> filtroPrivado;
     private FilteredList<ModelAeropuertoPublico> filtroPublico;
 
-    private boolean esPublico = true;
+    boolean esPublico = true;
     private static Stage s;
     private static boolean esAniadir;
+
     public static void setListaTodasPrivado(ObservableList<ModelAeropuertoPrivado> listaTodasPrivado) {
         ListarAeropuertoController.listaTodasPrivado = listaTodasPrivado;
     }
@@ -198,7 +199,7 @@ public class ListarAeropuertoController {
         try {
             FXMLLoader controlador = new FXMLLoader(HelloApplication.class.getResource("AniadirYEditarAeropuertos.fxml"));
             scene = new Scene(controlador.load());
-            s.setTitle("AVIONES - AÑADIR AEROPUERTO");
+            s.setTitle("Añade un aeropuerto");
             s.setScene(scene);
             AniadirYEditarAeropuertoController controller = controlador.getController();
             controller.setTablaPrivado(tablaPrivado);
@@ -225,8 +226,58 @@ public class ListarAeropuertoController {
     }
     @FXML
     void editarAeropuerto(ActionEvent event) {
-        // Lógica para editar un aeropuerto
+        esAniadir=false;
+        if(tablaPrivado.getSelectionModel().getSelectedItem()!=null||tablaPublico.getSelectionModel().getSelectedItem()!=null) {
+            s=new Stage();
+            Scene scene;
+            try {
+                FXMLLoader controlador = new FXMLLoader(HelloApplication.class.getResource("aniadirEditarAeropuertos.fxml"));
+                scene = new Scene(controlador.load());
+                s.setTitle("EDITAR AEROPUERTO");
+                s.setScene(scene);
+                AniadirYEditarAeropuertoController controller = controlador.getController();
+                controller.setTablaPrivado(tablaPrivado);
+                controller.setTablaPublico(tablaPublico);
+                if(esPublico) {
+                    ModelAeropuertoPublico modelo=tablaPublico.getSelectionModel().getSelectedItem();
+                    controller.setTxtAnioInauguracionText(modelo.getAnioInauguracion()+"") ;
+                    controller.setTxtCalleText(modelo.getDireccion().getCalle());
+                    controller.setTxtCapacidadText(modelo.getCapacidad()+"");
+                    controller.setTxtCiudadText(modelo.getDireccion().getCiudad());
+                    controller.setTxtFinanciacionText(modelo.getFinanciacion()+"");
+                    controller.setTxtNombreText(modelo.getNombre());
+                    controller.setTxtNumeroText(modelo.getDireccion().getNumero()+"");
+                    controller.setTxtNumTrabajadoresText(modelo.getNumTrabajadores()+"");
+                    controller.setTxtPaisText(modelo.getDireccion().getPais());
+                }else {
+                    ModelAeropuertoPrivado modelo=tablaPrivado.getSelectionModel().getSelectedItem();
+                    controller.setTxtAnioInauguracionText(modelo.getAnioInauguracion()+"") ;
+                    controller.setTxtCalleText(modelo.getDireccion().getCalle());
+                    controller.setTxtCapacidadText(modelo.getCapacidad()+"");
+                    controller.setTxtCiudadText(modelo.getDireccion().getCiudad());
+                    controller.setTxtNombreText(modelo.getNombre());
+                    controller.setTxtNumeroText(modelo.getDireccion().getNumero()+"");
+                    controller.setTxtNumSociosText(modelo.getNumSocios()+"");
+                    controller.setTxtPaisText(modelo.getDireccion().getPais());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            s.setResizable(false);
+            s.initOwner(HelloApplication.getStage());
+            s.initModality(javafx.stage.Modality.WINDOW_MODAL);
+            s.showAndWait();
+            filtrarPorNombre();
+            tablaPrivado.refresh();
+            tablaPublico.refresh();
+        }else {
+            Alert al=new Alert(Alert.AlertType.ERROR);
+            al.setHeaderText(null);
+            al.setContentText("NINGUN AEROPUERTO SELECCIONADO");
+            al.showAndWait();
+        }
     }
+
 
     @FXML
     void eliminarAvion(ActionEvent event) {
