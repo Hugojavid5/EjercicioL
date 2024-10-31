@@ -110,6 +110,7 @@ public class ListarAeropuertoController {
     boolean esPublico = true;
     private static Stage s;
     private static boolean esAniadir;
+    private static boolean borrar=true;
 
     public static void setListaTodasPrivado(ObservableList<ModelAeropuertoPrivado> listaTodasPrivado) {
         ListarAeropuertoController.listaTodasPrivado = listaTodasPrivado;
@@ -117,7 +118,9 @@ public class ListarAeropuertoController {
     public static void setListaTodasPublico(ObservableList<ModelAeropuertoPublico> listaTodasPublico) {
         ListarAeropuertoController.listaTodasPublico = listaTodasPublico;
     }
-
+    public static boolean isBorrar() {
+        return borrar;
+    }
     @FXML
     private void initialize() {
         try {
@@ -188,7 +191,25 @@ public class ListarAeropuertoController {
     // Métodos de acción del menú
     @FXML
     void activarDesactivarAvion(ActionEvent event) {
-        // Lógica para activar o desactivar un avión
+        borrar=false;
+        s=new Stage();
+        Scene scene;
+        try {
+            FXMLLoader controlador = new FXMLLoader(HelloApplication.class.getResource("ActivarYDesactivarAvion.fxml"));
+            scene = new Scene(controlador.load());
+            if (ListarAeropuertoController.isBorrar()){
+                s.setTitle("Elimina una avion");
+            } else {
+                s.setTitle("Activa o desactiva la avion");
+            }
+            s.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        s.setResizable(false);
+        s.initOwner(HelloApplication.getStage());
+        s.initModality(javafx.stage.Modality.WINDOW_MODAL);
+        s.showAndWait();
     }
 
     @FXML
