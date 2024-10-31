@@ -1,12 +1,16 @@
 package org.hugo.ejerciciol;
 import javafx.event.ActionEvent;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 import javafx.fxml.FXML;
 public class AniadirYEditarAeropuertoController {
 
-
+    @FXML
+    private Label lbl_Financiacion;
+    @FXML
+    private Label lbl_NumeroDeSocios;
+    @FXML
+    private Label lbL_NumeroDeTrabajadores;
     @FXML
     private RadioButton rb_privado;
 
@@ -44,11 +48,39 @@ public class AniadirYEditarAeropuertoController {
     private TextField txt_trabajadores;
 
     @FXML
-    void cancelar(ActionEvent event) {
+    private TextField txt_numeroDeSocios;
 
+    @FXML
+    void cancelar(ActionEvent event) {
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        stage.close();
     }
+
     @FXML
     void guardar(ActionEvent event) {
 
+    }
+    // Método para mostrar/ocultar campos según el tipo de aeropuerto seleccionado
+    @FXML
+    void generarCampos(ActionEvent event) {
+        if (rb_privado.isSelected()) {
+            // Mostrar campos para aeropuerto privado
+            lbl_NumeroDeSocios.setVisible(true);
+            txt_numeroDeSocios.setVisible(true);
+            // Ocultar campos para aeropuerto público
+            lbl_Financiacion.setVisible(false);
+            txt_financiacion.setVisible(false);
+            lbl_NumeroDeSocios.setVisible(false);
+            txt_trabajadores.setVisible(false);
+        } else if (rb_publico.isSelected()) {
+            // Mostrar campos para aeropuerto público
+            lbl_Financiacion.setVisible(true);
+            txt_financiacion.setVisible(true);
+            lbl_NumeroDeSocios.setVisible(true);
+            txt_trabajadores.setVisible(true);
+            // Ocultar campos para aeropuerto privado
+            lbl_NumeroDeSocios.setVisible(false);
+            txt_numeroDeSocios.setVisible(false);
+        }
     }
 }
