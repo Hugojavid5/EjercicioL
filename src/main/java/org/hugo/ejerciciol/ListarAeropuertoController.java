@@ -5,7 +5,7 @@ import Model.ModelAeropuertoPublico;
 import Model.ModelAeropuertoPrivado;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
+
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
@@ -14,13 +14,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import java.io.IOException;
-import javafx.stage.Modality;
 import java.sql.SQLException;
 import Model.ModelAvion;
-
+/**
+ * Controlador para la vista de listar aeropuertos.
+ */
 public class ListarAeropuertoController {
 
     @FXML
@@ -111,16 +111,34 @@ public class ListarAeropuertoController {
     private static Stage s;
     private static boolean esAniadir;
     private static boolean borrar=true;
-
+    /**
+     * Establece la lista de aeropuertos privados.
+     *
+     * @param listaTodasPrivado la lista de aeropuertos privados
+     */
     public static void setListaTodasPrivado(ObservableList<ModelAeropuertoPrivado> listaTodasPrivado) {
         ListarAeropuertoController.listaTodasPrivado = listaTodasPrivado;
     }
+    /**
+     * Establece la lista de aeropuertos públicos.
+     *
+     * @param listaTodasPublico la lista de aeropuertos públicos
+     */
+
     public static void setListaTodasPublico(ObservableList<ModelAeropuertoPublico> listaTodasPublico) {
         ListarAeropuertoController.listaTodasPublico = listaTodasPublico;
     }
+    /**
+     * Verifica si se debe borrar.
+     *
+     * @return true si se debe borrar, false de lo contrario
+     */
     public static boolean isBorrar() {
         return borrar;
     }
+    /*
+     *Método inicial que configura la vista y carga las listas de aeropuertos.
+     */
     @FXML
     private void initialize() {
         try {
@@ -289,7 +307,7 @@ public class ListarAeropuertoController {
             s=new Stage();
             Scene scene;
             try {
-                FXMLLoader controlador = new FXMLLoader(HelloApplication.class.getResource("aniadirEditarAeropuertos.fxml"));
+                FXMLLoader controlador = new FXMLLoader(HelloApplication.class.getResource("AniadirYEditarAeropuertos.fxml"));
                 scene = new Scene(controlador.load());
                 s.setTitle("EDITAR AEROPUERTO");
                 s.setScene(scene);

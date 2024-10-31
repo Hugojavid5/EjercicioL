@@ -1,10 +1,22 @@
 package Dao;
+
 import java.sql.*;
 import BBDD.ConexionBBDD;
 import Model.ModelDireccion;
+
+/**
+ * Clase que gestiona las operaciones de acceso a datos para la entidad Dirección.
+ */
 public class DaoDireccion {
 
     private static Connection conection;
+
+    /**
+     * Crea un modelo de dirección a partir de un ID.
+     *
+     * @param id El ID de la dirección que se desea recuperar.
+     * @return Un objeto ModelDireccion correspondiente a la dirección encontrada, o null si no se encuentra.
+     */
     public static ModelDireccion crearModeloDireccionPorID(int id) {
         conection = ConexionBBDD.getConnection();
         String select = "SELECT pais, ciudad, calle, numero FROM direcciones WHERE id=?";
@@ -13,7 +25,10 @@ public class DaoDireccion {
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return new ModelDireccion(rs.getString("pais"), rs.getString("ciudad"), rs.getString("calle"), rs.getInt("numero"));
+                return new ModelDireccion(rs.getString("pais"),
+                        rs.getString("ciudad"),
+                        rs.getString("calle"),
+                        rs.getInt("numero"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -21,6 +36,13 @@ public class DaoDireccion {
         return null;
     }
 
+    /**
+     * Inserta una nueva dirección en la base de datos y devuelve su ID generado.
+     *
+     * @param direccion La dirección a insertar.
+     * @return El ID de la dirección insertada.
+     * @throws SQLException Si ocurre un error al ejecutar la inserción.
+     */
     public static int insertarDireccion(ModelDireccion direccion) throws SQLException {
         String sql = "INSERT INTO direcciones (calle, ciudad, pais, numero) VALUES (?, ?, ?, ?)";
         try (Connection conn = ConexionBBDD.getConnection();
@@ -40,12 +62,20 @@ public class DaoDireccion {
             }
         }
     }
-    public static void aniadir(String pais, String ciudad,String calle,int numero) {
+
+    /**
+     * Añade una nueva dirección a la base de datos.
+     *
+     * @param pais   El país de la dirección.
+     * @param ciudad La ciudad de la dirección.
+     * @param calle  La calle de la dirección.
+     * @param numero El número de la dirección.
+     */
+    public static void aniadir(String pais, String ciudad, String calle, int numero) {
         conection = ConexionBBDD.getConnection();
-        String insert = "INSERT INTO direcciones (pais,ciudad,calle,numero) VALUES (?,?,?,?)";
+        String insert = "INSERT INTO direcciones (pais, ciudad, calle, numero) VALUES (?,?,?,?)";
         try {
-            PreparedStatement pstmt;
-            pstmt = conection.prepareStatement(insert);
+            PreparedStatement pstmt = conection.prepareStatement(insert);
             pstmt.setString(1, pais);
             pstmt.setString(2, ciudad);
             pstmt.setString(3, calle);
@@ -55,16 +85,25 @@ public class DaoDireccion {
             e.printStackTrace();
         }
     }
-    public static Integer conseguirID(String pais, String ciudad,String calle,int numero) {
-        conection=ConexionBBDD.getConnection();
-        String select="SELECT id FROM direcciones WHERE pais=? AND ciudad=? AND calle=? AND numero=?";
+
+    /**
+     * Consigue el ID de una dirección dada su información.
+     *
+     * @param pais   El país de la dirección.
+     * @param ciudad La ciudad de la dirección.
+     * @param calle  La calle de la dirección.
+     * @param numero El número de la dirección.
+     * @return El ID de la dirección encontrada, o null si no se encuentra.
+     */
+    public static Integer conseguirID(String pais, String ciudad, String calle, int numero) {
+        conection = ConexionBBDD.getConnection();
+        String select = "SELECT id FROM direcciones WHERE pais=? AND ciudad=? AND calle=? AND numero=?";
         try {
-            PreparedStatement pstmt;
-            pstmt=conection.prepareStatement(select);
-            pstmt.setString(1,pais);
-            pstmt.setString(2,ciudad);
-            pstmt.setString(3,calle);
-            pstmt.setInt(4,numero);
+            PreparedStatement pstmt = conection.prepareStatement(select);
+            pstmt.setString(1, pais);
+            pstmt.setString(2, ciudad);
+            pstmt.setString(3, calle);
+            pstmt.setInt(4, numero);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 return rs.getInt("id");
