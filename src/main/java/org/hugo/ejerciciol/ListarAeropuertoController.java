@@ -18,7 +18,7 @@ import javafx.scene.Scene;
 import java.io.IOException;
 import java.sql.SQLException;
 import Model.ModelAvion;
-import org.hugo.ejerciciol.AniadirYEditarAeropuertoController;
+
 /**
  * Controlador para la vista de listar aeropuertos.
  */
@@ -207,7 +207,7 @@ public class ListarAeropuertoController {
         s=new Stage();
         Scene scene;
         try {
-            FXMLLoader controlador = new FXMLLoader(HelloApplication.class.getResource("ActivarYDesactivarAvion.fxml"));
+            FXMLLoader controlador = new FXMLLoader(AeropuertosApp.class.getResource("ActivarYDesactivarAvion.fxml"));
             scene = new Scene(controlador.load());
             if (ListarAeropuertoController.isBorrar()){
                 s.setTitle("Elimina una avion");
@@ -219,7 +219,7 @@ public class ListarAeropuertoController {
             e.printStackTrace();
         }
         s.setResizable(false);
-        s.initOwner(HelloApplication.getStage());
+        s.initOwner(AeropuertosApp.getStage());
         s.initModality(javafx.stage.Modality.WINDOW_MODAL);
         s.showAndWait();
     }
@@ -232,7 +232,7 @@ public class ListarAeropuertoController {
 
         try {
             // Cargar el FXML para la ventana de añadir/editar aeropuerto
-            FXMLLoader controlador = new FXMLLoader(HelloApplication.class.getResource("AniadirYEditarAeropuertos.fxml"));
+            FXMLLoader controlador = new FXMLLoader(AeropuertosApp.class.getResource("AniadirYEditarAeropuertos.fxml"));
             scene = new Scene(controlador.load());
 
             s.setTitle("Añade un aeropuerto");
@@ -252,7 +252,7 @@ public class ListarAeropuertoController {
         }
 
         s.setResizable(false); // Hacer la ventana no redimensionable
-        s.initOwner(HelloApplication.getStage()); // Establecer el dueño de la ventana
+        s.initOwner(AeropuertosApp.getStage()); // Establecer el dueño de la ventana
         s.initModality(javafx.stage.Modality.WINDOW_MODAL); // Modalidad de ventana
         s.showAndWait(); // Mostrar la ventana y esperar su cierre
 
@@ -269,7 +269,7 @@ public class ListarAeropuertoController {
         s=new Stage();
         Scene scene;
         try {
-            FXMLLoader controlador = new FXMLLoader(HelloApplication.class.getResource("AniadirAvion.fxml"));
+            FXMLLoader controlador = new FXMLLoader(AeropuertosApp.class.getResource("AniadirAvion.fxml"));
             scene = new Scene(controlador.load());
             s.setTitle("Añade una nueva avion");
             s.setScene(scene);
@@ -277,7 +277,7 @@ public class ListarAeropuertoController {
             e.printStackTrace();
         }
         s.setResizable(false);
-        s.initOwner(HelloApplication.getStage());
+        s.initOwner(AeropuertosApp.getStage());
         s.initModality(javafx.stage.Modality.WINDOW_MODAL);
         s.showAndWait();
     }
@@ -320,7 +320,7 @@ public class ListarAeropuertoController {
             s=new Stage();
             Scene scene;
             try {
-                FXMLLoader controlador = new FXMLLoader(HelloApplication.class.getResource("AniadirYEditarAeropuertos.fxml"));
+                FXMLLoader controlador = new FXMLLoader(AeropuertosApp.class.getResource("AniadirYEditarAeropuertos.fxml"));
                 scene = new Scene(controlador.load());
                 s.setTitle("EDITAR AEROPUERTO");
                 s.setScene(scene);
@@ -355,7 +355,7 @@ public class ListarAeropuertoController {
                 e.printStackTrace();
             }
             s.setResizable(false);
-            s.initOwner(HelloApplication.getStage());
+            s.initOwner(AeropuertosApp.getStage());
             s.initModality(javafx.stage.Modality.WINDOW_MODAL);
             s.showAndWait();
             filtrarPorNombre();
@@ -377,7 +377,7 @@ public class ListarAeropuertoController {
         s=new Stage();
         Scene scene;
         try {
-            FXMLLoader controlador = new FXMLLoader(HelloApplication.class.getResource("ActivarYDesactivarAvion.fxml"));
+            FXMLLoader controlador = new FXMLLoader(AeropuertosApp.class.getResource("ActivarYDesactivarAvion.fxml"));
             scene = new Scene(controlador.load());
             s.setTitle("Elimina una avion");
             s.setScene(scene);
@@ -385,7 +385,7 @@ public class ListarAeropuertoController {
             e.printStackTrace();
         }
         s.setResizable(false);
-        s.initOwner(HelloApplication.getStage());
+        s.initOwner(AeropuertosApp.getStage());
         s.initModality(javafx.stage.Modality.WINDOW_MODAL);
         s.showAndWait();
     }
